@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FxCalc">
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+   <children>
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#invertSignButtonPressed" text="+/-" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#pointButtonPressed" text="." GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="7" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="9" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="5" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="6" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#numericButtonPressed" text="3" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#divideButtonPressed" text="/" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#multiplyButtonPressed" text="*" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#subtractButtonPressed" text="-" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#equalButtonPressed" text="=" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#squareRootButtonPressed" text="sqrt" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+      <TextField fx:id="display" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" text="\%" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#clearButtonPressed" text="C" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#addButtonPressed" text="+" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+   </children>
+</GridPane>

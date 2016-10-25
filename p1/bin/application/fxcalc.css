@@ -1,0 +1,43 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.root {
+-fx-font-size: 26px;
+-fx-background-color: white;
+
+	-fx-max-width:10000px;
+	-fx-max-height:10000px;
+	-fx-min-width:100px;
+	-fx-min-height:100px;
+}
+
+.text-field{
+	-fx-max-width:8000px;
+	-fx-max-height:2000px;
+	-fx-min-width:80px;
+	-fx-min-height:20px;
+}
+
+.button {
+	-fx-max-width:2000px;
+	-fx-max-height:2000px;
+	-fx-min-width:20px;
+	-fx-min-height:20px;
+	
+	-fx-background-color: white;
+	-fx-background-radius: 5%;
+	-fx-font-size: 20px;
+	-fx-font-color:red;
+
+	-fx-border-color: red ;
+    -fx-border-width: 2 ; 
+    -fx-border-style: solid, segments(1, 1);
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.button:hover{
+	-fx-background-color: Bisque;
+}
+
+.button:pressed, .button:default:hover:pressed {
+	-fx-background-color: Crimson;
+}
