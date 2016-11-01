@@ -1,11 +1,17 @@
 package application;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import application.Calculator.CalculatorOperator;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +25,11 @@ import javafx.stage.Stage;
 
 public class FxCalc extends Application {
 		private DoubleProperty fontSize = new SimpleDoubleProperty(10);
+		private static List<Consumer<Boolean>> disablingMethods = new ArrayList<>(); 
+		
+		public FxCalc(){
+			System.out.println("AX11");	
+		}
 	
 	  @Override
 	  public void start(Stage primaryStage) {
@@ -28,8 +39,13 @@ public class FxCalc extends Application {
 	      
 	      root.getChildrenUnmodifiable().stream().filter(n -> n instanceof Button).map( n -> (Button)n)
 	      	.forEach(button -> {
+	      		
 	      		button.setPadding(Insets.EMPTY);
 	      		button.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(), ";"));
+	      		if( !button.getText().equals("C")){
+	      			System.out.println("EMEM "+disablingMethods.size());
+	      			disablingMethods.add( (b) -> Platform.runLater(() -> { button.setDisable(b);}));
+	      		}
 	      	});
 	      
 	      root.getChildrenUnmodifiable().stream().filter(n -> n instanceof TextField).map( n -> (TextField)n)
@@ -122,6 +138,13 @@ public class FxCalc extends Application {
 	  }
 	  
 	  private void updateScreen(){
+		  System.out.println("NUM IS "+disablingMethods.size());
+		  if( calculator.getDisplayedValue().equals("ERR") || calculator.getDisplayedValue().equals("DIV/0") || calculator.getDisplayedValue().endsWith("E")){
+			  disablingMethods.stream().forEach(c -> c.accept(true));
+			  System.out.println("DISSS");
+		  } else {
+			  disablingMethods.stream().forEach(c -> c.accept(false));
+		  }
 		  display.setText( calculator.getDisplayedValue());
 	  }
 	  

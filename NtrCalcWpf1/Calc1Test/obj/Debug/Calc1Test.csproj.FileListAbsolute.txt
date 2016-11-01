@@ -1,0 +1,9 @@
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\bin\Debug\Calc1Test.dll
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\bin\Debug\Calc1Test.pdb
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\bin\Debug\Calc1.exe
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\bin\Debug\log4net.dll
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\bin\Debug\Calc1.pdb
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\bin\Debug\log4net.xml
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\obj\Debug\Calc1Test.csprojResolveAssemblyReference.cache
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\obj\Debug\Calc1Test.dll
+c:\Users\administrator\documents\visual studio 2012\Projects\Calc1\Calc1Test\obj\Debug\Calc1Test.pdb
