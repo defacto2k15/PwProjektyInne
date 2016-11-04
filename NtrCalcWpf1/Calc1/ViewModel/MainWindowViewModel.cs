@@ -1,9 +1,9 @@
 ﻿using Calc;
 using Calc1.Model;
-using Numerics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,23 +71,21 @@ namespace Calc1.View1
             return new NoArgumentRelayCommand(finalAction);
         }
 
-        public const int DIGITS_SCREEN_SIZE = 10;
-
         private void setScreen()
         {
             if (calculator.CalculatorState == CalculatorState.ACCUMULATOR_VIEW)
             {
                 String accumulatorValueString = calculator.AccumulatorValue.ToString("G");
                 var trimmedNumber = trimNumberToScreen(accumulatorValueString);
-                if (trimmedNumber.Item1)
+                if (!trimmedNumber.Item1)
                 {
-                    ShouldButtonsBeEnabled = true;
-                    ScreenText = trimmedNumber.Item2;
-                } else {
-                    ShouldButtonsBeEnabled = false;
-                    new ErrorCalculatorState(trimmedNumber.Item2 + "E");
-                    ScreenText = calculator.ScreenText;
+                    accumulatorValueString = calculator.AccumulatorValue.ToString("e", CultureInfo.CurrentCulture);
+                } else
+                {
+                    accumulatorValueString = trimmedNumber.Item2;
                 }
+                ShouldButtonsBeEnabled = true;
+                ScreenText = accumulatorValueString;
             }
             else if (calculator.CalculatorState == CalculatorState.SCREEN_VIEW)
             {
@@ -100,7 +98,7 @@ namespace Calc1.View1
                 else
                 {
                     ShouldButtonsBeEnabled = false;
-                    new ErrorCalculatorState(trimmedNumber.Item2 + "E");
+                    calculator.goToErrorState(trimmedNumber.Item2 + "E");
                     ScreenText = calculator.ScreenText;
                 }
             }
@@ -109,7 +107,6 @@ namespace Calc1.View1
                 ShouldButtonsBeEnabled = false;
                 ScreenText = calculator.ScreenText;
             }
-            Console.WriteLine("It is " + calculator.ScreenText);
         }
 
         Tuple<bool, string> trimNumberToScreen(string inputString)
@@ -122,33 +119,33 @@ namespace Calc1.View1
                 inputString = inputString.Substring(1);
             }
 
-            if (inputString.Length > DIGITS_SCREEN_SIZE)
+            if (inputString.Length > Constants.DIGITS_SCREEN_SIZE)
             {
                 if (inputString.Contains(Constants.decimalNumberSeparator) == false)
                 {
-                    inputString = inputString.Substring(0, DIGITS_SCREEN_SIZE );
+                    inputString = inputString.Substring(0, Constants.DIGITS_SCREEN_SIZE );
                     goodNumber = false;
                 }
                 else
                 {
                     var commaIndex = inputString.IndexOf(Constants.decimalNumberSeparator);
-                    if (commaIndex > DIGITS_SCREEN_SIZE)
+                    if (commaIndex > Constants.DIGITS_SCREEN_SIZE)
                     {
-                        inputString = inputString.Substring(0, DIGITS_SCREEN_SIZE );
+                        inputString = inputString.Substring(0, Constants.DIGITS_SCREEN_SIZE );
                         goodNumber = false;
                     }
-                    else if (commaIndex == DIGITS_SCREEN_SIZE-1)
+                    else if (commaIndex == Constants.DIGITS_SCREEN_SIZE-1)
                     {
-                        if( inputString.Length >= DIGITS_SCREEN_SIZE ){
-                            inputString = inputString.Substring(0, DIGITS_SCREEN_SIZE+1);    
+                        if( inputString.Length >= Constants.DIGITS_SCREEN_SIZE ){
+                            inputString = inputString.Substring(0, Constants.DIGITS_SCREEN_SIZE+1);    
                         } else {
-                            inputString = inputString.Substring(0, DIGITS_SCREEN_SIZE - 1);
+                            inputString = inputString.Substring(0, Constants.DIGITS_SCREEN_SIZE - 1);
                         }
                         goodNumber = true;
                     }
                     else
                     {
-                        inputString = inputString.Substring(0, DIGITS_SCREEN_SIZE );
+                        inputString = inputString.Substring(0, Constants.DIGITS_SCREEN_SIZE + 1);
                         goodNumber = true;
                     }
                 }

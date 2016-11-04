@@ -9,9 +9,11 @@ namespace Calc1.Model
     class ErrorCalculatorState : ICalculator
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private int maxDigitsOnScreen;
 
-        public ErrorCalculatorState(string screenText)
+        public ErrorCalculatorState(string screenText, int maxDigitsOnScreen)
         {
+            this.maxDigitsOnScreen = maxDigitsOnScreen;
             log.Debug("Nowy stan kalkulatora:ErrorCalculatorState: Wartosc na ekranie:" + screenText);
             ScreenText = screenText;
         }
@@ -33,7 +35,7 @@ namespace Calc1.Model
         public ICalculator clearButtonPressed()
         {
             log.Debug("Wcisnieto przycisk czyszczenia ");
-            return new ScreenViewCalculatorState(0, "0", CalculatorOperator.ADD);
+            return new ScreenViewCalculatorState(0, "0", CalculatorOperator.ADD, maxDigitsOnScreen);
         }
         public ICalculator invertSignButtonPressed()
         {

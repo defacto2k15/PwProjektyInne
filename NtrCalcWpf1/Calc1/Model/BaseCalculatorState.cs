@@ -8,13 +8,15 @@ namespace Calc1.Model
 {
     abstract class BaseCalculatorState : ICalculator
     {
-        protected BaseCalculatorState(decimal AccumulatorValue, string ScreenText, CalculatorOperator calculatorOperator)
+        protected BaseCalculatorState(decimal AccumulatorValue, string ScreenText, CalculatorOperator calculatorOperator, int maxDigitsOnScreen)
         {
             this.AccumulatorValue = AccumulatorValue;
             this.ScreenText = ScreenText;
             this.calculatorOperator = calculatorOperator;
+            this.maxDigitsOnScreen = maxDigitsOnScreen;
         }
 
+        protected int maxDigitsOnScreen;
         protected CalculatorOperator calculatorOperator;
         public decimal AccumulatorValue { get; protected set; }
         public string ScreenText { get; protected set; }

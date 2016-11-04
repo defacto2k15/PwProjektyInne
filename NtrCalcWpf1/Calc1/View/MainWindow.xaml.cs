@@ -30,7 +30,7 @@ namespace Calc1
         {
             log.Debug("Uruchomienie Progamu");
             InitializeComponent();
-            DataContext = new MainWindowViewModel(new CalculatorFacade());
+            DataContext = new MainWindowViewModel(new CalculatorFacade(Constants.DIGITS_SCREEN_SIZE));
             
         }
     }

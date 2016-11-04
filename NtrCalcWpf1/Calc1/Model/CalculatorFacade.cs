@@ -8,55 +8,67 @@ namespace Calc1.Model
 {
     public class CalculatorFacade : ICalculatorFacade
     {
-        ICalculator currentCalculator = new ScreenViewCalculatorState(0, "0", CalculatorOperator.ADD);
+        private int maxDigitsOnScreen;
+        public CalculatorFacade( int maxDigitsOnScreen)
+        {
+            this.maxDigitsOnScreen = maxDigitsOnScreen;
+            this.currentCalculator = new ScreenViewCalculatorState(0, "0", CalculatorOperator.ADD, maxDigitsOnScreen);
+        }
 
-        public override void numericButtonPressed(int button)
+        ICalculator currentCalculator;
+
+        public  void numericButtonPressed(int button)
         {
             currentCalculator = currentCalculator.numericButtonPressed(button);
         }
-        public override void operatorButtonPressed(CalculatorOperator calculatorOperator)
+        public  void operatorButtonPressed(CalculatorOperator calculatorOperator)
         {
             currentCalculator = currentCalculator.operatorButtonPressed(calculatorOperator);
         }
-        public override void dotButtonPressed()
+        public  void dotButtonPressed()
         {
             currentCalculator = currentCalculator.dotButtonPressed();
         }
-        public override void clearButtonPressed()
+        public  void clearButtonPressed()
         {
             currentCalculator = currentCalculator.clearButtonPressed();
         }
-        public override void invertSignButtonPressed()
+        public  void invertSignButtonPressed()
         {
             currentCalculator = currentCalculator.invertSignButtonPressed();
         }
-        public override void squareRootButtonPressed()
+        public  void squareRootButtonPressed()
         {
             currentCalculator = currentCalculator.squareRootButtonPressed();
         }
-        public override void equalButtonPressed()
+        public  void equalButtonPressed()
         {
             currentCalculator = currentCalculator.equalButtonPressed();
         }
-        public override void percentButtonPressed()
+        public  void percentButtonPressed()
         {
             currentCalculator = currentCalculator.percentButtonPressed();
         }
-        public override decimal AccumulatorValue
+        public void goToErrorState(string description)
+        {
+            currentCalculator = new ErrorCalculatorState(description, maxDigitsOnScreen);
+        }
+
+        public  decimal AccumulatorValue
         {
             get
             {
                 return currentCalculator.AccumulatorValue;
             }
         }
-        public override string ScreenText
+        public  string ScreenText
         {
             get
             {
                 return currentCalculator.ScreenText;
             }
         }
-        public override CalculatorState CalculatorState
+        public  CalculatorState CalculatorState
         {
             get
             {

@@ -16,6 +16,7 @@ namespace Calc1.Model
          void squareRootButtonPressed();
          void equalButtonPressed();
          void percentButtonPressed();
+         void goToErrorState(string description);
          decimal AccumulatorValue
         {
             get;

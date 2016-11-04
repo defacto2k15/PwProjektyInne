@@ -1,68 +1,67 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Calc1.Model;
 using System.Collections.Generic;
+using Calc1.Model;
+using Calc1;
 
-namespace Calc1Test.Model
+namespace Zad2Test.Model
 {
     [TestClass]
     public class CalculatorFacadeTest
     {
-        CalculatorFacade calculator = new CalculatorFacade();
-
         [TestMethod]
-        public void TestMethod1()
+        public void CalculatorFacadeMainTest()
         {
-            test(aTestData().pressNumbers("1234"), "1234");
-            test(aTestData().pressNumbers("1234567890"), "1234567890");
-            test(aTestData().pressNumbers("12345678901"), "1234567890");
-            test(aTestData().pressNumbers("1234").dot().pressNumbers("1234"), "1234.1234");
-            test(aTestData().pressNumbers("1234").dot().dot().dot().pressNumbers("1234"), "1234.1234");
-            test(aTestData().dot().pressNumbers("1234"), "0.1234");
-            test(aTestData().pressNumbers("000012").dot().pressNumbers("1234"), "12.1234");
-            test(aTestData().dot().pressNumbers("0001234"), "0.0001234");
+            test(aTestData().pressNumbers("1234"), ExpectedScreenValue:"1234");
+            test(aTestData().pressNumbers("1234567890"), ExpectedScreenValue: "1234567890");
+            test(aTestData().pressNumbers("12345678901"), ExpectedScreenValue: "1234567890");
+            test(aTestData().pressNumbers("1234").dot().pressNumbers("1234"), ExpectedScreenValue: "1234,1234");
+            test(aTestData().pressNumbers("1234").dot().dot().dot().pressNumbers("1234"), ExpectedScreenValue: "1234,1234");
+            test(aTestData().dot().pressNumbers("1234"), ExpectedScreenValue: "0,1234");
+            test(aTestData().pressNumbers("000012").dot().pressNumbers("1234"), ExpectedScreenValue: "12,1234");
+            test(aTestData().dot().pressNumbers("0001234"), ExpectedScreenValue: "0,0001234");
 
-            test(aTestData().pressNumbers("1234").add().pressNumbers("1234").eq(), null, 2468);
-            test(aTestData().pressNumbers("1234").add().dot().pressNumbers("1234").eq(), null, new Decimal(1234.1234));
-            test(aTestData().pressNumbers("300").subtract().pressNumbers("600").eq(), null, -300);
-            test(aTestData().pressNumbers("300").multiply().pressNumbers("3").eq(), null, 900);
-            test(aTestData().pressNumbers("300").multiply().pressNumbers("00").dot().pressNumbers("2").eq(), null, 60);
-            test(aTestData().pressNumbers("100").divide().pressNumbers("4").eq(), null, 25);
-            test(aTestData().pressNumbers("100").divide().pressNumbers("25").eq(), null, 4);
-            test(aTestData().pressNumbers("100").divide().pressNumbers("00000").eq(), null, null, CalculatorState.ERROR);
-            test(aTestData().pressNumbers("100").divide().eq(), null, null, CalculatorState.ERROR);
+            test(aTestData().pressNumbers("1234").add().pressNumbers("1234").eq(), ExpectedAccumulatorValue:2468);
+            test(aTestData().pressNumbers("1234").add().dot().pressNumbers("1234").eq(), ExpectedAccumulatorValue: new Decimal(1234.1234));
+            test(aTestData().pressNumbers("300").subtract().pressNumbers("600").eq(), ExpectedAccumulatorValue: -300);
+            test(aTestData().pressNumbers("300").multiply().pressNumbers("3").eq(), ExpectedAccumulatorValue: 900);
+            test(aTestData().pressNumbers("300").multiply().pressNumbers("00").dot().pressNumbers("2").eq(), ExpectedAccumulatorValue: 60);
+            test(aTestData().pressNumbers("100").divide().pressNumbers("4").eq(), ExpectedAccumulatorValue: 25);
+            test(aTestData().pressNumbers("100").divide().pressNumbers("25").eq(), ExpectedAccumulatorValue: 4);
+            test(aTestData().pressNumbers("100").divide().pressNumbers("00000").eq(), state:CalculatorState.ERROR);
+            test(aTestData().pressNumbers("100").divide().eq(), null, null, state:CalculatorState.ERROR);
 
-            test(aTestData().pressNumbers("81").sqrt(), null, 9, CalculatorState.ACCUMULATOR_VIEW);
-            test(aTestData().pressNumbers("81").inv().sqrt(), null, null, CalculatorState.ERROR);
+            test(aTestData().pressNumbers("81").sqrt(), ExpectedAccumulatorValue:9, state: CalculatorState.ACCUMULATOR_VIEW);
+            test(aTestData().pressNumbers("81").inv().sqrt(), state:CalculatorState.ERROR);
 
-            test(aTestData().pressNumbers("1234").inv(), "-1234", null, null);
-            test(aTestData().pressNumbers("0000").inv(), "0", null, null);
+            test(aTestData().pressNumbers("1234").inv(), ExpectedScreenValue:"-1234");
+            test(aTestData().pressNumbers("0000").inv(), ExpectedScreenValue:"0");
 
-            test(aTestData().pressNumbers("1234").clear().pressNumbers("2222"), "2222", null, null);
-            test(aTestData().pressNumbers("1234").add().clear().pressNumbers("2222"), "2222", null, null);
+            test(aTestData().pressNumbers("1234").clear().pressNumbers("2222"), ExpectedScreenValue:"2222");
+            test(aTestData().pressNumbers("1234").add().clear().pressNumbers("2222"), ExpectedScreenValue:"2222");
+
+            test(aTestData().pressNumbers("100").add().pressNumbers("5").eq().eq().eq().eq(), ExpectedAccumulatorValue: 120);
+
+            test(aTestData().pressNumbers("999999999").multiply().pressNumbers("999999999").eq().eq().eq(), ExpectedScreenValue: "OVERFLOW", state:CalculatorState.ERROR);
         }
 
         void test(TestData data, string ExpectedScreenValue = null, decimal? ExpectedAccumulatorValue = null, CalculatorState? state = null)
         {
-            calculator = new CalculatorFacade();
+            CalculatorFacade calculator = new CalculatorFacade(Constants.DIGITS_SCREEN_SIZE);
             String description = data.executeActions(calculator);
             if (ExpectedScreenValue != null)
             {
                 Assert.AreEqual(ExpectedScreenValue, calculator.ScreenText, description);
             }
-            if( ExpectedAccumulatorValue != null)
+            if (ExpectedAccumulatorValue != null)
             {
                 Assert.AreEqual(ExpectedAccumulatorValue, calculator.AccumulatorValue, description);
             }
             if (state != null && state.HasValue)
             {
                 Assert.AreEqual(state.Value, calculator.CalculatorState, description);
-            }
-            
-            
+            }  
         }
-
-
 
         TestData aTestData()
         {
@@ -70,13 +69,15 @@ namespace Calc1Test.Model
         }
     }
 
-    class TestData{
+    class TestData
+    {
         private string description;
         private List<Action<CalculatorFacade>> actionsList = new List<Action<CalculatorFacade>>();
 
         public string executeActions(CalculatorFacade calc)
         {
-            foreach( var action in actionsList ){
+            foreach (var action in actionsList)
+            {
                 action(calc);
             }
             return description;
@@ -156,4 +157,5 @@ namespace Calc1Test.Model
             }
         }
     }
+
 }

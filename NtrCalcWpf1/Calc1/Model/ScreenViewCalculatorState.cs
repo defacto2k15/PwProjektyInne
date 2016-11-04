@@ -11,14 +11,15 @@ namespace Calc1.Model
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ScreenViewCalculatorState(decimal accumulatorValue, string screenValue, CalculatorOperator calculatorOperator) 
-            : base(accumulatorValue, screenValue, calculatorOperator){
+        public ScreenViewCalculatorState(decimal accumulatorValue, string screenValue, CalculatorOperator calculatorOperator, int maxDigitsOnScreen) 
+            : base(accumulatorValue, screenValue, calculatorOperator, maxDigitsOnScreen)
+        {
                 log.Debug("Nowy stan kalkulatora: ScreenViewCalculatorStateL Wartosc w akumulatorze:" + accumulatorValue + " Wartosc na ekranie:" + screenValue + " operator:" + calculatorOperator);
         }
 
         public override ICalculator numericButtonPressed(int button)
         {
-            if (ScreenText.Length < MainWindowViewModel.DIGITS_SCREEN_SIZE)
+            if (ScreenText.Length < maxDigitsOnScreen)
             {
                 if (ScreenText.Equals("0"))
                 {
@@ -29,21 +30,29 @@ namespace Calc1.Model
                     ScreenText = ScreenText + button;
                 }
             }
-			return new ScreenViewCalculatorState(AccumulatorValue, ScreenText, calculatorOperator);
+			return new ScreenViewCalculatorState(AccumulatorValue, ScreenText, calculatorOperator, maxDigitsOnScreen);
 
         }
         public override ICalculator operatorButtonPressed(CalculatorOperator newCalculatorOperator)
         {
             log.Debug("Wcisnieto przycisk operatora " + calculatorOperator);
-            if( calculatorOperator == CalculatorOperator.DIVIDE && ScreenValue == 0 ){
-                return new ErrorCalculatorState(Constants.defaultErrorString);
+            try
+            {
+                if (calculatorOperator == CalculatorOperator.DIVIDE && ScreenValue == 0)
+                {
+                    return new ErrorCalculatorState(Constants.defaultErrorString, maxDigitsOnScreen);
+                }
+                AccumulatorValue = calculatorOperator.executeAction(ScreenValue, AccumulatorValue);
+                return new ScreenViewCalculatorState(AccumulatorValue, "0", newCalculatorOperator, maxDigitsOnScreen);
+            } catch( OverflowException e)
+            {
+                log.Warn("Overflow exception ", e);
+                return new ErrorCalculatorState(Constants.OVERFLOW, maxDigitsOnScreen);
             }
-            AccumulatorValue = calculatorOperator.executeAction(ScreenValue, AccumulatorValue);
-            return new ScreenViewCalculatorState(AccumulatorValue, "0", newCalculatorOperator); 
         }
         public override ICalculator dotButtonPressed()
         {
-            if (thereIsNoDot() && ScreenText.Length < MainWindowViewModel.DIGITS_SCREEN_SIZE)
+            if (thereIsNoDot() && ScreenText.Length < maxDigitsOnScreen)
             {
                 ScreenText = ScreenText + Constants.decimalNumberSeparator;
             }
@@ -57,7 +66,7 @@ namespace Calc1.Model
         public override ICalculator clearButtonPressed()
         {
             log.Debug("Wcisnieto przycisk czyszczenia ");
-            return new ScreenViewCalculatorState(0, "0", CalculatorOperator.ADD);
+            return new ScreenViewCalculatorState(0, "0", CalculatorOperator.ADD, maxDigitsOnScreen);
         }
         public override ICalculator invertSignButtonPressed()
         {
@@ -74,7 +83,7 @@ namespace Calc1.Model
             {
                 newScreenValue = ScreenText;
             }
-            return new ScreenViewCalculatorState(AccumulatorValue, newScreenValue, calculatorOperator);
+            return new ScreenViewCalculatorState(AccumulatorValue, newScreenValue, calculatorOperator, maxDigitsOnScreen);
         }
 
         public override ICalculator squareRootButtonPressed()
@@ -82,30 +91,38 @@ namespace Calc1.Model
             log.Debug("Wcisnieto przycisk pierwiastka ");
             if (ScreenValue < 0)
             {
-                return new ErrorCalculatorState(Constants.defaultErrorString);
+                return new ErrorCalculatorState(Constants.defaultErrorString, maxDigitsOnScreen);
             }
             ScreenValue = (decimal)Math.Sqrt((double)ScreenValue);
-            return new AccumulatorViewCalculatorState(ScreenValue, "0", CalculatorOperator.ADD);
+            return new AccumulatorViewCalculatorState(ScreenValue, "0", CalculatorOperator.ADD, maxDigitsOnScreen);
         }
         public override ICalculator equalButtonPressed()
         {
             log.Debug("Wcisnieto przycisk wykonania rownania ");
-            if (calculatorOperator == CalculatorOperator.DIVIDE && ScreenValue == 0)
+            try
             {
-                return new ErrorCalculatorState(Constants.defaultErrorString);
+                if (calculatorOperator == CalculatorOperator.DIVIDE && ScreenValue == 0)
+                {
+                    return new ErrorCalculatorState(Constants.defaultErrorString, maxDigitsOnScreen);
+                }
+                AccumulatorValue = calculatorOperator.executeAction(ScreenValue, AccumulatorValue);
+                return new AccumulatorViewCalculatorState(AccumulatorValue, ScreenText, calculatorOperator, maxDigitsOnScreen);
             }
-            AccumulatorValue = calculatorOperator.executeAction(ScreenValue, AccumulatorValue);
-            return new AccumulatorViewCalculatorState(AccumulatorValue, ScreenText, calculatorOperator); 
+            catch (OverflowException e)
+            {
+                log.Warn("Overflow exception ", e);
+                return new ErrorCalculatorState(Constants.OVERFLOW, maxDigitsOnScreen);
+            }
         }
         public override ICalculator percentButtonPressed()
         {
             log.Debug("Wcisnieto przycisk procentu ");
             ScreenValue = AccumulatorValue * (ScreenValue * (decimal)0.01);
             if( calculatorOperator == CalculatorOperator.DIVIDE && ScreenValue == 0 ){
-                return new ErrorCalculatorState(Constants.defaultErrorString);
+                return new ErrorCalculatorState(Constants.defaultErrorString, maxDigitsOnScreen);
             }
             AccumulatorValue = calculatorOperator.executeAction(ScreenValue, AccumulatorValue);
-            return new AccumulatorViewCalculatorState(AccumulatorValue, "0", calculatorOperator);
+            return new AccumulatorViewCalculatorState(AccumulatorValue, "0", calculatorOperator, maxDigitsOnScreen);
         }
         public override CalculatorState CalculatorState
         {
