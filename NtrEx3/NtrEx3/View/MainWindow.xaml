@@ -1,0 +1,232 @@
+﻿<Window x:Class="NtrEx3.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NtrEx3.View"
+        Title="MainWindow" Height="450" Width="525">
+    <Window.Resources>
+        <Style TargetType="Window">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="BaseTextBoxStyle">
+            <Setter Property="Margin" Value="0,0,7,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="RightAlignedTextBoxStyle" BasedOn="{StaticResource BaseTextBoxStyle}">
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
+        </Style>
+        <Style x:Key="StudentDescriptionStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="Button" x:Key="RedButtonStyle">
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="5" BorderBrush="Red" Background="RosyBrown" BorderThickness="1" Padding="2" Name="border">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                <Setter Property="Border.BorderBrush" TargetName="border" Value="Black"/>
+                                <Setter Property="Border.Background" TargetName="border" Value="Aqua"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter  Property="Border.BorderBrush" TargetName="border" Value="Black"/>
+                                <Setter  Property="Border.Background" TargetName="border" Value="Gray" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName = FirstNameTextBox, 
+                    Path=(Validation.HasError)}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName = LastNameTextBox, 
+                    Path=(Validation.HasError)}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName = IndexTextBox, 
+                    Path=(Validation.HasError)}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </DataTrigger>
+            </Style.Triggers> 
+        </Style>
+        <Style TargetType="Button" x:Key="BlueButtonStyle">
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="5" BorderBrush="DarkBlue" Background="LightBlue" BorderThickness="1" Padding="2" Name="border">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                <Setter Property="Border.BorderBrush" TargetName="border" Value="Black"/>
+                                <Setter Property="Border.Background" TargetName="border" Value="Aqua"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter  Property="Border.BorderBrush" TargetName="border" Value="Black"/>
+                                <Setter  Property="Border.Background" TargetName="border" Value="Gray" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,4,0,4"/>
+        </Style>
+        <DataTemplate x:Key="StudentTemplate">
+            <WrapPanel >
+                <TextBlock Text="{Binding FirstName}" Style="{StaticResource StudentDescriptionStyle}" />
+                <TextBlock FontWeight="Bold" Text="{Binding LastName}" Style="{StaticResource StudentDescriptionStyle}" />
+                <TextBlock Text="Nr Indeksu:"  Style="{StaticResource StudentDescriptionStyle}" />
+                <TextBlock Text="{Binding IndexNo}"  Foreground="Blue" Style="{StaticResource StudentDescriptionStyle}" />
+                <TextBlock Text="Miasto urodzenia:"  Style="{StaticResource StudentDescriptionStyle}" />
+                <TextBlock Text="{Binding BirthPlace}"   Style="{StaticResource StudentDescriptionStyle}" />
+                <TextBlock Text="Grupa:"  Style="{StaticResource StudentDescriptionStyle}" />
+                <TextBlock Text="{Binding IDGroup}"   Style="{StaticResource StudentDescriptionStyle}" />
+            </WrapPanel>
+        </DataTemplate>
+        <Style x:Key="TextBoxErrorTemplate" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                     Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="12*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition ></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Row="0" Margin="5" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Grupa:</TextBlock>
+            <ComboBox Grid.Column="1" Grid.Row="0"  ItemsSource="{Binding Path=FilterGroups}" SelectedItem="{Binding Path=SelectedSearchGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Miasto:</TextBlock>
+            
+            <TextBox Grid.Column="1" Grid.Row="1"  Margin="0,4,0,4" Text="{Binding Path=SelectedSearchCities, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+            <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource BlueButtonStyle}" Command="{Binding FilterButtonCommand}">Filtruj</Button>
+            <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource BlueButtonStyle}" Command="{Binding ClearButtonCommand}">Wyczysc</Button>
+        </Grid>
+            <ListBox SelectionMode="Single" Grid.Row="1"  Margin="5"
+                     
+                 ItemsSource="{Binding Students, UpdateSourceTrigger=PropertyChanged}"
+                 ItemTemplate="{StaticResource StudentTemplate}" SelectedItem="{Binding Path=SelectedStudent}" >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="VerticalContentAlignment"
+                Value="Stretch"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+        <Grid Grid.Row="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Content="&lt;-" Command="{Binding PreviousPageCommand}" Style="{StaticResource BlueButtonStyle}"></Button>
+                <Button Grid.Column="5"  Content="-&gt;" Command="{Binding NextPageCommand}"  Style="{StaticResource BlueButtonStyle}"/>
+                <TextBlock  Grid.Column="2" Text="{Binding CurrentPageNumber}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock  Grid.Column="3" Text="Na" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock  Grid.Column="4" Text="{Binding AllPagesCount}" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
+            </Grid>
+            
+        <Grid Grid.Row="3" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource RightAlignedTextBoxStyle}"  >Grupa:</TextBlock>
+
+            <ComboBox Grid.Row="0" Grid.Column="1"  ItemsSource="{Binding Path=Groups}" SelectedItem="{Binding Path=SelectedInputGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></ComboBox>
+
+            <TextBlock   Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource RightAlignedTextBoxStyle}">Imie:</TextBlock>
+
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="FirstNameTextBox" Text="{Binding Path=InputName, Mode=TwoWay, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxErrorTemplate}"></TextBox>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource RightAlignedTextBoxStyle}">Nazwisko:</TextBlock>
+            <TextBox Grid.Row="2" Grid.Column="1" x:Name="LastNameTextBox" Text="{Binding Path=InputSurname, Mode=TwoWay, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxErrorTemplate}"></TextBox>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource RightAlignedTextBoxStyle}">Miejsce urodzenia:</TextBlock>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=InputBirthplace, Mode=TwoWay, ValidatesOnExceptions=True}"></TextBox>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource RightAlignedTextBoxStyle}">Data urodzenia:</TextBlock>
+            <Grid Grid.Row="4" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="8*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Viewbox  Grid.Column="0">
+                    <CheckBox Margin="4,4,0,4" IsChecked="{Binding IsDateTimeEnabled, Mode=TwoWay}" ></CheckBox>
+                </Viewbox>
+                <DatePicker  Grid.Column="1" IsEnabled="{Binding IsDateTimeEnabled}" SelectedDate="{Binding Path=InputBirthDate, Mode=TwoWay}" Margin="0,1" SelectedDateFormat="Long" />
+            </Grid>
+            
+
+            <TextBlock Grid.Row="5" Grid.Column="0"  Style="{StaticResource RightAlignedTextBoxStyle}">Indeks:</TextBlock>
+            <TextBox Grid.Row="5" Grid.Column="1"  x:Name="IndexTextBox" Text="{Binding Path=InputIndexNumber, Mode=TwoWay, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxErrorTemplate}"></TextBox>
+            
+            <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Style="{StaticResource RedButtonStyle}" Command="{Binding NewButtonCommand}">Nowy</Button>
+                <Button Grid.Column="2" Style="{StaticResource RedButtonStyle}" Command="{Binding SaveButtonCommand}">Zapisz</Button>
+                <Button Grid.Column="3" Style="{StaticResource RedButtonStyle}" Command="{Binding DeleteButtonCommand}">Usun</Button>
+            </Grid>
+
+        </Grid>
+    </Grid>
+
+</Window>
